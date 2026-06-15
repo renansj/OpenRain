@@ -77,7 +77,7 @@ The correct comparison is not with OpenAI. It is with Linux in 1995: worse than 
 
 ```
 +-------------------------------------------------------------+
-|                      OPENRAIN NETWORK                        |
+|                      OPENRAIN NETWORK                       |
 +-------------------------------------------------------------+
 |                                                             |
 |  TRAINERS (volunteer)            VERIFIERS (paid in $RAIN)  |
@@ -92,7 +92,7 @@ The correct comparison is not with OpenAI. It is with Linux in 1995: worse than 
 |  +------------------------------------------v-----------+   |
 |  | 13B models trained with different data/seeds         |   |
 |  | Cross-voting for hallucination/backdoor detection    |   |
-|  | p_inter ~ 0.3 (low error correlation)               |   |
+|  | p_inter ~ 0.3 (low error correlation)                |   |
 |  +------------------------------------------------------+   |
 |                                                             |
 |  DEFENSE ENGINE (4 layers)                                  |
