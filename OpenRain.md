@@ -13,7 +13,9 @@
 
 OpenRain is a peer-to-peer network for collaborative training of open-source language models with formal integrity guarantees. Anyone in the world can contribute GPU power to train powerful AI models with no geographic restrictions, no corporate control, and no access barriers.
 
-The system combines distributed training via adaptive DiLoCo (sparse communication, fault tolerant), paid verification in a native token ($RAIN) to ensure quality, NeurASM (a reasoning intermediate representation for auditability), and a multi-layer defense system with a formally proven 93% integrity guarantee against adversaries controlling 10% of the network.
+The system combines distributed training via adaptive DiLoCo (sparse communication, fault tolerant), paid verification in a native token ($RAIN) to ensure quality, NeurASM (a reasoning intermediate representation for auditability, research stage), and a multi-layer defense system.
+
+Under stated assumptions (PL condition, bounded variance, VRF randomness, functional backdoor detectability), the system achieves a formal 93% integrity bound against adversaries controlling 10% of the network. This is a conditional theoretical guarantee; empirical validation is part of the research roadmap.
 
 The resulting model is public, unrestricted (Apache 2.0), and distributed via P2P.
 
@@ -438,6 +440,10 @@ This is the headline property: **Security improves monotonically with operation 
 
 ## 8. Formal Security Proof
 
+### Epistemological note
+
+The bounds below are **conditional theoretical guarantees**, not empirical measurements. They hold if and only if assumptions H1-H5 hold in practice. Validating these assumptions empirically at scale is an open research task and a core part of the roadmap (Phase 0-1). We present the formal analysis to quantify what the system can guarantee given reasonable assumptions, to identify which parameters matter most, and to provide a framework for empirical validation. The math tells us where to look; experiments tell us if we are right.
+
 ### What we want to prove
 
 We want to show that after 1000 training rounds, the model is within 5% of optimal with high probability, even with 10% of nodes being adversarial.
@@ -688,10 +694,24 @@ The insight: weak GPUs are **natural verifiers**. Verification is computationall
 
 ## 14. Roadmap
 
+### Component Maturity
+
+| Component | Maturity | Status |
+|-----------|----------|--------|
+| DiLoCo distributed training | Validated in literature | Ready for Phase 0 experiments |
+| Byzantine-robust aggregation | Validated in literature | Ready for implementation |
+| Sampling-based verification | Validated in literature | Ready for implementation |
+| Progressive stake / reputation | Novel combination | Needs empirical validation |
+| $RAIN token economics | Speculative | Needs economic modeling |
+| NeurASM traces | Research direction | Unsolved prerequisite: faithful trace generation |
+| Formal 93% bound | Conditional on assumptions | Needs empirical validation of H1-H5 |
+| Cross-model voting | Plausible | Needs empirical measurement of inter-model correlation |
+
 ### Phase 0: Validation (Weeks 1-4)
 - Implement DiLoCo over Hivemind/torchrunx
 - Train GPT-2 124M distributed with 5 nodes
 - Confirm convergence matches single-node baseline
+- Simulate security bounds empirically (inject adversarial nodes, measure actual degradation)
 - Publish results and code
 
 ### Phase 1: Prototype (Months 2-3)
@@ -699,19 +719,20 @@ The insight: weak GPUs are **natural verifiers**. Verification is computationall
 - Docker container for plug-and-play participation
 - Sampling-based verification system
 - Public dashboard (active nodes, progress, loss curve)
-- Empirical simulation of security bounds
+- Empirical validation: do assumptions H1-H5 hold for this model?
 
 ### Phase 2: Scale (Months 4-6)
 - Competitive 7B model
 - Complete 4-layer defense
-- $RAIN token and paid verification
-- NeurASM v0.1
+- Reputation system (pre-token, track contributions)
 - Benchmarks against Llama, Mistral, Qwen
 
 ### Phase 3: Maturity (Months 7-12)
 - 13B+ model
+- $RAIN token and paid verification (only after proving training works)
 - Cross-model voting (3 auditor models)
 - Operational online learning of thresholds
+- NeurASM v0.1 research prototype
 - Academic publication (MLSys/NeurIPS workshop)
 
 ### Phase 4: Long term
