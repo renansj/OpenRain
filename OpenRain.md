@@ -76,39 +76,39 @@ The correct comparison is not with OpenAI. It is with Linux in 1995: worse than 
 ## 3. Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      OPENRAIN NETWORK                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  TRAINERS (volunteer)            VERIFIERS (paid in $RAIN)  │
-│  ┌───────────────────┐          ┌───────────────────────┐  │
-│  │ Contribute GPU    │          │ Validate NeurASM trace│  │
-│  │ Adaptive DiLoCo   │──────────│ Check correctness     │  │
-│  │ Receive: model    │          │ Detect hallucination  │  │
-│  └───────────────────┘          │ Receive: $RAIN        │  │
-│                                  └───────────┬───────────┘  │
-│                                              │              │
-│  CROSS-VALIDATORS (3-5 independent models)   │              │
-│  ┌───────────────────────────────────────────▼───────────┐  │
-│  │ 13B models trained with different data/seeds          │  │
-│  │ Cross-voting for hallucination/backdoor detection     │  │
-│  │ ρ_inter ≈ 0.3 (low error correlation)                │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                                                             │
-│  DEFENSE ENGINE (4 layers)                                  │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │ L1: Randomized filter (|F|=8 mechanisms)              │  │
-│  │ L2: Effect-based verification + mixture sampling      │  │
-│  │ L3: Temporal detection (cumulative score, γ=0.95)     │  │
-│  │ L4: Periodic cryptographic audit (re-execution)       │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                                                             │
-│  CONSENSUS (L2 chain, low cost)                             │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │ Verification registry · $RAIN distribution ·          │  │
-│  │ Staking · On-chain reputation · VRF for randomization │  │
-│  └───────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      OPENRAIN NETWORK                        |
++-------------------------------------------------------------+
+|                                                             |
+|  TRAINERS (volunteer)            VERIFIERS (paid in $RAIN)  |
+|  +-------------------+          +-----------------------+   |
+|  | Contribute GPU    |          | Validate NeurASM trace|   |
+|  | Adaptive DiLoCo   |----------| Check correctness     |   |
+|  | Receive: model    |          | Detect hallucination  |   |
+|  +-------------------+          | Receive: $RAIN        |   |
+|                                 +-----------+-----------+   |
+|                                             |               |
+|  CROSS-VALIDATORS (3-5 independent models)  |               |
+|  +------------------------------------------v-----------+   |
+|  | 13B models trained with different data/seeds         |   |
+|  | Cross-voting for hallucination/backdoor detection    |   |
+|  | p_inter ~ 0.3 (low error correlation)               |   |
+|  +------------------------------------------------------+   |
+|                                                             |
+|  DEFENSE ENGINE (4 layers)                                  |
+|  +------------------------------------------------------+   |
+|  | L1: Randomized filter (|F|=8 mechanisms)             |   |
+|  | L2: Effect-based verification + mixture sampling     |   |
+|  | L3: Temporal detection (cumulative score, y=0.95)    |   |
+|  | L4: Periodic cryptographic audit (re-execution)      |   |
+|  +------------------------------------------------------+   |
+|                                                             |
+|  CONSENSUS (L2 chain, low cost)                             |
+|  +------------------------------------------------------+   |
+|  | Verification registry . $RAIN distribution .         |   |
+|  | Staking . On-chain reputation . VRF for randomization|   |
+|  +------------------------------------------------------+   |
++-------------------------------------------------------------+
 ```
 
 The key insight is the separation of incentives. Trainers contribute compute voluntarily (their reward is the model itself). Verifiers are paid in $RAIN because verification is tedious but critical work that nobody would do for free at scale.
@@ -444,7 +444,7 @@ We want to show that after 1000 training rounds, the model is within 5% of optim
 
 Formally, define "system is secure" as:
 
-$$P\left(\frac{\text{our model's loss} - \text{optimal loss}}{\text{initial loss} - \text{optimal loss}} \leq 5\%\right) \geq 93\%$$
+$$P\left(\frac{\text{our model's loss} - \text{optimal loss}}{\text{initial loss} - \text{optimal loss}} \leq 0.05\right) \geq 0.93$$
 
 This means: with 93% probability, the adversary causes at most 5% relative degradation.
 
@@ -522,7 +522,7 @@ As shown in Part 1: $P(D) \approx 0$.
 
 $$P(\text{failure}) \leq 0 + 0.020 + 0.050 + 0 = 0.070$$
 
-$$\boxed{P(\text{system is secure}) \geq 1 - 0.070 = 93.0\%}$$
+$$\boxed{P(\text{system is secure}) \geq 1 - 0.070 = 0.930}$$
 
 ### Impossibility lower bound
 
@@ -532,7 +532,7 @@ $$P(\text{secure}) \leq 1 - \epsilon \cdot (1 - 1/|H|)^{M \cdot |H|}$$
 
 For ε=0.1, |H|=1000, M=3 cross-validators:
 
-$$P(\text{secure}) \leq 1 - 0.1 \cdot e^{-3} = 99.5\%$$
+$$P(\text{secure}) \leq 1 - 0.1 \cdot e^{-3} = 0.995$$
 
 **Interpretation:** 99.5% is the theoretical ceiling. Our 93% is at 96.6% efficiency relative to the theoretical optimum. The 6.5pp gap is closable with larger holdouts and more cross-validators.
 
